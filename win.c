@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <Windows.h>
+#include <unistd.h>
+#include <limits.h>
 
 int main(int argc, char *argv[]) {
 

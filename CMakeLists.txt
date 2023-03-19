@@ -3,4 +3,4 @@ project(sp4 C)
 
 set(CMAKE_C_STANDARD 23)
 
-add_executable(sp4 main.c main.c 1.c 2.c)
+add_executable(sp4 1.c win.c linux.c 1234.c alb.c 12345.c)
