@@ -1,28 +1,32 @@
+
 #include <stdio.h>
 #include <stdlib.h>
-#include <sys/stat.h>
-#include <string.h>
-#include <limits.h>
 #include <unistd.h>
+#include <fcntl.h>
+#include <sys/stat.h>
 
 int main(int argc, char *argv[]) {
     if (argc != 2) {
-        char error_message[] = "You must use only 1 argument:\n- Amount of symbols to print\n";
-        write(STDERR_FILENO,
-              error_message,
-              strlen(error_message));
-        return -1;
+        write(STDERR_FILENO, "Usage: ./program filename\n", 26);
+        exit(EXIT_FAILURE);
     }
 
-    const char *filename = argv[1];
+    int fd = open(argv[1], O_RDONLY);
+    if (fd == -1) {
+        write(STDERR_FILENO, "Error: File not found\n", 22);
+        exit(EXIT_FAILURE);
+    }
+
     struct stat st;
-
-    if (stat(filename, &st) == -1) {
-        perror("stat");
-        exit(1);
+    if (fstat(fd, &st) == -1) {
+        write(STDERR_FILENO, "Error: Unable to get file information\n", 39);
+        close(fd);
+        exit(EXIT_FAILURE);
     }
-    write(STDOUT_FILENO, st.st_size,strlen(st.st_size))
-    printf("File size: %ld bytes\n", st.st_size);
-    return 0;
-}
 
+    char size[20];
+    int n = sprintf(size, "%lu\n", st.st_size);
+    write(STDOUT_FILENO, size, n);
+    close(fd);
+    exit(EXIT_SUCCESS);
+}
